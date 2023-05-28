@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "@radix-ui/colors": "^0.1.8",
+    "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-label": "^2.0.1",
     "@radix-ui/react-slot": "^1.0.1",
+    "@radix-ui/react-toggle": "^1.0.2",
     "@remix-run/css-bundle": "^1.16.1",
     "@remix-run/node": "^1.16.1",
     "@remix-run/react": "^1.16.1",
@@ -24,6 +26,7 @@
     "react-dom": "^18.2.0",
     "remix-auth": "^3.4.0",
     "remix-auth-google": "^1.2.0",
+    "remix-server-kit": "^3.0.0-beta6",
     "tailwind-merge": "^1.12.0",
     "tailwindcss-animate": "^1.0.5",
     "zod": "^3.21.4"

@@ -24,6 +24,18 @@ export default function NavBar() {
 
             <nav>
                 <ul className="flex space-x-2">
+                <li className="text-muted cursor-pointer" onClick={() => handleClick("item4")}>
+                        <NavLink
+                            to={"agents"}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? " border-accent text-secondary px-2"
+                                    : "hover:text-accent transition duration-150 px-2"
+                            }
+                        >
+                            Agents
+                        </NavLink>
+                    </li>
                     <li className="text-muted cursor-pointer" onClick={() => handleClick("item1")}>
                         <NavLink
                             to={"login"}
