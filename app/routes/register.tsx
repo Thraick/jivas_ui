@@ -8,7 +8,7 @@ import { Button } from "components/ui/button";
 import { Label } from "components/ui/label";
 import { Input } from "components/ui/input";
 import { X } from "lucide-react";
-import { z } from "zod";
+import { string, z } from "zod";
 import { useState } from "react";
 
 export let meta = () => {
@@ -24,10 +24,13 @@ export let meta = () => {
 
 const emailSchema = z.string().email({ message: 'Invalid email format' }).nonempty({ message: 'email is required' });
 const passwordSchema = z.string().min(6, { message: 'password must be at least 6 characters long' }).nonempty({ message: 'password is required' });
+const Usernameschema = z.string().min(6, { message: 'Username must be at least 6 characters long' }).nonempty({ message: 'Username is required' });
+
 
 const schema = z.object({
     email: emailSchema,
     password: passwordSchema,
+    Username: Usernameschema
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -63,12 +66,12 @@ export let loader = async ({ request }: LoaderArgs) => {
     return { user };
 };
 
-export default function Login() {
+export default function register() {
 
     const submit = useSubmit();
 
     const actionData = useActionData();
-    const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '' });
+    const [formValues, setFormValues] = useState<FormValues>({ email: '', password: '', Username: '' });
     const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]);
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -92,7 +95,7 @@ export default function Login() {
         const formData = new FormData();
         formData.append('email', formValues.email);
         formData.append('password', formValues.password);
-        submit(formData, { method: 'post', action: '/login' });
+        submit(formData, { method: 'post', action: '/register' });
     }
     return (
         <section className="h-screen">
@@ -108,6 +111,17 @@ export default function Login() {
 
                     <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
                         <Form onSubmit={handleFormSubmit}>
+                            <div className="relative z-0 w-full mb-6 group">
+                                <input
+                                    name="Username"
+                                    value={formValues.Username}
+                                    onChange={handleInputChange}
+                                    type="text" id="floating_email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+                                    placeholder=" " />
+                                <label htmlFor="Username" className="peer-focus:font-medium absolute text-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
+                                {formErrors.find((error) => error.path[0] === 'Username')?.message ? <div className="mt-2">{formErrors.find((error) => error.path[0] === 'Username')?.message}</div> : null}
+                            </div>
+
                             <div className="relative z-0 w-full mb-6 group">
                                 <input
                                     name="email"
@@ -144,14 +158,8 @@ export default function Login() {
                                         Remember me
                                     </label>
                                 </div>
-
-                                <a
-                                    href="#!"
-                                    className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                                >Forgot password?
-                                </a>
                             </div>
-                            <button type="submit" className="text-white uppercase w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded text-sm px-5 py-2.5 text-center mr-2 mb-2">Sign in</button>
+                            <button type="submit" className="text-white uppercase w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded text-sm px-5 py-2.5 text-center mr-2 mb-2">Register</button>
 
 
 
@@ -168,17 +176,15 @@ export default function Login() {
                         onClick={() => submit(null, { method: 'post', action: '/auth/google' })}
                         type="button" className="text-white uppercase w-full bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded text-sm px-5 py-2.5 text-center mr-2 mb-2 mt-2">Continue with Google</button>
 
-                        <Link to={'/register'}>
+                        <Link
+                            to={'/login'}
+                        >
                             <button
                                 type="button"
                                 
                                 className="text-white uppercase w-full bg-gradient-to-r from-gray-500 via-gray-600 to-gray-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded text-sm px-5 py-2.5 text-center mr-2 mb-2 mt-4"
-                            >
-                                Register
-                            </button>
-
+                            >Sign In</button>
                         </Link>
-
                         
                     </div>
                 </div>
