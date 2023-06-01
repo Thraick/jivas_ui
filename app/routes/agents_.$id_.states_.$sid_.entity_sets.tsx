@@ -99,7 +99,7 @@ export default function faqs() {
                                     <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
                                 </li>
                                 <li>
-                                    <Link to={`/agents/${id}/entity_sets`}>States</Link>
+                                    <Link to={`/agents/${id}/states`}>States</Link>
                                 </li>
                                 <li>
                                     <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>

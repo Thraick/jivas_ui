@@ -13,8 +13,9 @@ export const stateResponseSchema = z.object({
   text: z.string(),
 });
 
-export const statePromptsSchema = z.object({
-  text: z.string()
+export const statePromptSchema = z.object({
+  id: z.string(),
+  prompt: z.string(),
 })
 
 const stateSchema = z.object({
@@ -59,5 +60,5 @@ export type AgentType = z.infer<typeof agentSchema>;
 export type StatesType = z.infer<typeof stateSchema>;
 export type StateType = z.infer<typeof statSchema>;
 export type ResponseType = z.infer<typeof stateResponseSchema>;
-export type PromptsType = z.infer<typeof statePromptsSchema>;
+export type PromptsType = z.infer<typeof statePromptSchema>;
 export type EntitySetType = z.infer<typeof entitySetSchema>;

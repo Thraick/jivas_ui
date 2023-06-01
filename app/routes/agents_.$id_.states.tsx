@@ -305,7 +305,7 @@ export default function Agents() {
                                                         </div>
                                                         :
                                                         <div>
-                                                            <Button onClick={(e) => handlePublishButtonClick(e, res)} style={{ backgroundColor: `${colors[res.type_] || 'red'}11` }} variant={'secondary'} className="bg-blend-darken">Publish</Button>
+                                                            <Button onClick={(e) => handlePublishButtonClick(e, res)} style={{ backgroundColor: `${colors[res.type_] || 'red'}11` }} variant={'secondary'} className="bg-blend-darken">Unpublish</Button>
                                                         </div>}
                                                 </CardFooter>
                                             </Card>
