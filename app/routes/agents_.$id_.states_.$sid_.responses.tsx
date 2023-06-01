@@ -160,7 +160,7 @@ export default function faqs() {
                                             // </div>
                                             <div key={res.id} className="bg-background max-w-4xl mx-auto hover:bg-card shadow-md rounded px-8 pt-6 pb-8 mb-4">
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <h3 className="text-md normal-case mr-2">{res.text}</h3>
+                                                    <h3 className="text-md capitalize mr-2">{res.text}</h3>
                                                     <div className="flex items-center space-x-2">
                                                         {res.published ? (
                                                             <Button onClick={(e) => handlePublishButtonClick(e, res)} variant="secondary" className="bg-blue-200">

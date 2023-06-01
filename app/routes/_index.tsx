@@ -23,7 +23,7 @@ export default function Index() {
   return (
     <>
 
-      <div>hello</div>
+      {/* <div>hello</div> */}
       {/* <FSidebar /> */}
       {/* <h1>{www} ww</h1>
     <h1>{qqq} qq</h1>

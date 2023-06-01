@@ -39,16 +39,6 @@ export default function faqs() {
 
     const navigate = useNavigate();
 
-    // const handlePublishButtonClick = (e: any, res: ResponseType) => {
-    //     e.stopPropagation();
-    //     const updatedData = resData.map((item) => {
-    //         if (item.text === res.text) {
-    //             return { ...item, published: !res.published };
-    //         }
-    //         return item;
-    //     });
-    //     setResData(updatedData);
-    // };
 
     useEffect(() => {
         let localStateName = localStorageService.getItem('stateName')
@@ -59,7 +49,7 @@ export default function faqs() {
 
     const handleCreateTransition = () => {
         // localStorageService.setItem('agent_name', res.name)
-        localStorageService.setItem('newResponse', searchTerm)
+        localStorageService.setItem('newEntity', searchTerm)
         navigate("new")
     }
 
@@ -77,7 +67,7 @@ export default function faqs() {
         <>
             <div className="flex-1 justify-between flex flex-col h-screen bg-gray-100">
                 <div className="bg-background shadow-md p-4 flex justify-between items-center">
-                    <h1 className="text-3xl capitalize">{stateName.replace(/_/g, " ")} Response</h1>
+                    <h1 className="text-3xl capitalize">{stateName.replace(/_/g, " ")} Entity Set</h1>
                     <div className="flex items-center">
 
                         <Input
@@ -97,29 +87,19 @@ export default function faqs() {
 
                             <ol className="list-reset flex">
                                 <li>
-                                    <a
-                                        href="#"
-                                        className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                                    >Home
-                                    </a>
+                                    <Link to={`/`}>Home</Link>
                                 </li>
                                 <li>
                                     <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
                                 </li>
                                 <li>
-                                    <a
-                                        href="#"
-                                        className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                                    >Agents</a>
+                                    <Link to={`/agents`}>Agents</Link>
                                 </li>
                                 <li>
                                     <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
                                 </li>
                                 <li>
-                                    <a
-                                        href="#"
-                                        className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                                    >States</a>
+                                    <Link to={`/agents/${id}/entity_sets`}>States</Link>
                                 </li>
                                 <li>
                                     <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
@@ -128,7 +108,7 @@ export default function faqs() {
                             </ol>
                         </nav>
                     </div>
-                    <Button variant={'secondary'} onClick={handleCreateTransition} className="bg-gray-400" ><Plus className="mr-2 h-4 w-4" /> New Response</Button>
+                    <Button variant={'secondary'} onClick={handleCreateTransition} className="bg-blue-400" ><Plus className="mr-2 h-4 w-4" /> New Entity</Button>
                 </div>
 
                 {
@@ -137,8 +117,8 @@ export default function faqs() {
                         <div className="overflow-y-auto max-h-3/4 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch flex-grow">
 
                             <div
-                            onClick={handleCreateTransition} 
-                            className="bg-background max-w-4xl mx-auto hover:bg-card shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer">
+                                onClick={handleCreateTransition}
+                                className="bg-background max-w-4xl mx-auto hover:bg-card shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer">
                                 <div className="flex flex-col items-center justify-center">
                                     <h1 className="uppercase">Create New Entity</h1>
                                     <p className="case-normal">{searchTerm}</p>
@@ -147,7 +127,6 @@ export default function faqs() {
                             </div>
                         </div>
                         :
-
                         <div className="overflow-y-auto max-h-3/4 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch flex-grow">
                             {
                                 filteredSearch
@@ -173,8 +152,8 @@ export default function faqs() {
                                         //     <h2 className="text-gray-700">ss {res.published}</h2>
                                         // </div>
                                         <div key={res.id} className="bg-background max-w-4xl mx-auto hover:bg-card shadow-md rounded px-8 py-4  mb-4">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <h3 className="text-md normal-case mr-2">{res.entity}</h3>
+                                            <div className="flex justify-between items-center items-start">
+                                                    <h3 className="text-md capitalize mr-2">{res.entity}</h3>
                                                 <div className="flex items-center space-x-2">
                                                     {/* {res.published ? (
                                                         <Button onClick={(e) => handlePublishButtonClick(e, res)} variant="secondary" className="bg-blue-200">
@@ -186,7 +165,7 @@ export default function faqs() {
                                                         </Button>
                                                     )} */}
                                                     <div>
-                                                        <Link to={`/agents/${id}/states/${sid}/responses/${res.id}`}>
+                                                        <Link to={`/agents/${id}/states/${sid}/entity_sets/${res.id}`}>
                                                             <Button variant="outline">
                                                                 <Edit className="mr-2 h-4 w-4" /> Edit
                                                             </Button>
@@ -202,7 +181,7 @@ export default function faqs() {
                         </div>
                 }
             </div>
-{/* 
+            {/* 
             <div className="absolute bottom-10 right-10">
                 <Link to={'/faqs/new'}>
                     <Button variant={"secondary"} className="hover:bg-accent rounded-full  h-14 py-4 px-4">
@@ -218,17 +197,17 @@ export default function faqs() {
 const rdata = {
     "notice": "",
     "payload": [
-      {
-        "id": "urn:uuid:c57b24a7-cc06-41d2-b706-3d2e9bc16a32",
-        "entity": "names"
-      },
-      {
-        "id": "urn:uuid:5f919826-f8ac-43a9-89e0-1f4118f91532",
-        "entity": "number"
-      },
-      {
-        "id": "urn:uuid:79329834-8150-400a-b959-0f2c2b197acb",
-        "entity": "address"
-      }
+        {
+            "id": "urn:uuid:c57b24a7-cc06-41d2-b706-3d2e9bc16a32",
+            "entity": "names"
+        },
+        {
+            "id": "urn:uuid:5f919826-f8ac-43a9-89e0-1f4118f91532",
+            "entity": "number"
+        },
+        {
+            "id": "urn:uuid:79329834-8150-400a-b959-0f2c2b197acb",
+            "entity": "address"
+        }
     ]
-  }
+}

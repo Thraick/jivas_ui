@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionArgs) {
         //     return redirect(`/agents/${params.id}/states/${params.sid}/responses`)
         // }
         console.log(ctx)
-        return redirect(`/agents/${params.id}/states/${params.sid}/responses`)
+        return redirect(`/agents/${params.id}/states/${params.sid}/entity_sets`)
     } catch (error) {
         return error;
     }
@@ -47,7 +47,7 @@ export default function DeleteEntitySetDialog(props: { res: EntitySetType, state
         // if(props.label){
         //     formData.append('stateId', 'sadfljsaof');
         // }
-        submit(formData, { method: "post", action: `/agents/${id}/states/${sid}/responses/delete` });
+        submit(formData, { method: "post", action: `/agents/${id}/states/${sid}/entity_sets/delete` });
     }
 
     return (
@@ -60,7 +60,7 @@ export default function DeleteEntitySetDialog(props: { res: EntitySetType, state
             }
                 <DialogContent>
                     <DialogHeader className="justify-center items-center">
-                        <DialogTitle className="capitalize">Delete {props.agentName} {props.stateName} Response</DialogTitle>
+                        <DialogTitle className="capitalize">Delete {props.agentName} {props.stateName} Entity</DialogTitle>
                     </DialogHeader>
                     <DialogDescription className="normal-case">{props.res.entity}</DialogDescription>
                     <DialogFooter>

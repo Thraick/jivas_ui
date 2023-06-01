@@ -11,6 +11,8 @@ import { Label } from "components/ui/label";
 import { Input } from "components/ui/input";
 import { ActionArgs, redirect } from "@remix-run/node";
 import DeleteStateResponseDialog from "./agents_.$id_.states_.$sid_.responses_.delete";
+import { EntitySetType, entitySetSchema } from "~/utils/dataTypes";
+import DeleteEntitySetDialog from "./agents_.$id_.states_.$sid_.entity_sets_.delete";
 
 
 
@@ -21,14 +23,11 @@ export async function action({ request, params }: ActionArgs) {
 
     const formData = await request.formData();
     const id = formData.get('id')
-    const text = formData.get('text')
-    const type = formData.get('type_')
-    const published = formData.get('published')
+    const entity = formData.get('teentityxt')
+
     const ctx = {
         id,
-        text,
-        type,
-        published
+        entity,
     }
     try {
         console.log(ctx)
@@ -36,7 +35,7 @@ export async function action({ request, params }: ActionArgs) {
         // if (payload.info.warning) {
         //     return payload.info.warning;
         // }
-        return redirect(`/agents/${params.id}/states/${params.sid}/responses`)
+        return redirect(`/agents/${params.id}/states/${params.sid}/entity_sets`)
     } catch (error) {
         return error;
     }
@@ -45,13 +44,13 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function Agents() {
 
-    const agentsList = adata as ResponseType
+    const agentsList = adata as EntitySetType
 
     const submit = useSubmit();
     const {id, sid, rid} = useParams();
 
     const actionData = useActionData();
-    const [formValues, setFormValues] = useState<ResponseType>(agentsList);
+    const [formValues, setFormValues] = useState<EntitySetType>(agentsList);
     // const [formValues, setFormValues] = useState<ResponseType>({id: '', published: false, text: '', type_: '' });
     const [formErrors, setFormErrors] = useState<z.ZodIssue[]>([]);
     const [checked, setChecked] = useState(false)
@@ -78,10 +77,10 @@ export default function Agents() {
 
     function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const parsedFormValues: ResponseType = {
+        const parsedFormValues: EntitySetType = {
             ...formValues,
         };
-        const validationResult = stateResponseSchema.safeParse(parsedFormValues);
+        const validationResult = entitySetSchema.safeParse(parsedFormValues);
         if (validationResult.success) {
             setFormErrors([])
             handleSubmit({ formValues });
@@ -91,15 +90,11 @@ export default function Agents() {
     };
 
 
-    function handleSubmit({ formValues }: { formValues: ResponseType }) {
+    function handleSubmit({ formValues }: { formValues: EntitySetType }) {
         const formData = new FormData();
         if(rid) formData.append('id', rid);
-        formData.append('text', formValues.text);
-        formData.append('type_', formValues.type_);
-        formData.append('published', String(checked));
-        console.log(formValues)
-        console.log(agentsList)
-        submit(formData, { method: 'post', action: `/agents/${id}/states/${sid}/responses/${rid}` });
+        formData.append('entity', formValues.entity);
+        submit(formData, { method: 'post', action: `/agents/${id}/states/${sid}/entity_sets/${rid}` });
     }
 
 
@@ -109,52 +104,32 @@ export default function Agents() {
 
                 <Form onSubmit={handleFormSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="flex items-center justify-between mb-4">
-                        <h1 className="text-2xl font-bold capitalize">Edit {agentName} {stateName} Response </h1>
-                        <Link to={`/agents/${id}/states/${sid}/responses`}>
+                        <h1 className="text-2xl font-bold capitalize">Edit {agentName} {stateName} Entity </h1>
+                        <Link to={`/agents/${id}/states/${sid}/entity_sets`}>
                             <Button variant={"ghost"}><X /></Button>
                         </Link>
                     </div>
 
                     <div className="mb-4 flex items-center">
-                        <Label htmlFor="name" className="w-32">Response</Label>
+                        <Label htmlFor="entity" className="w-32">Entity</Label>
                         <Input
-                            name="text"
+                            name="entity"
                             type="text"
-                            value={formValues.text}
+                            value={formValues.entity}
                             onChange={handleInputChange}
                             autoFocus
                         />
-                        {formErrors.find((error) => error.path[0] === 'text')?.message ? <div>{formErrors.find((error) => error.path[0] === 'text')?.message}</div> : null}
-                    </div>
-
-                    <div className="mb-4 flex items-center">
-                        <Label htmlFor="type" className="w-32">Type</Label>
-                        <Input
-                            name="type_"
-                            type="text"
-                            value={formValues.type_}
-                            onChange={handleInputChange}
-                        />
-                        {formErrors.find((error) => error.path[0] === 'type_')?.message ? <div>{formErrors.find((error) => error.path[0] === 'type_')?.message}</div> : null}
+                        {formErrors.find((error) => error.path[0] === 'entity')?.message ? <div>{formErrors.find((error) => error.path[0] === 'entity')?.message}</div> : null}
                     </div>
 
 
 
 
-                    <div className="mb-4 flex items-center">
-                        <Label htmlFor="published" className="w-32">Published</Label>
-                        <div className="flex items-center w-full">
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" checked={checked} name="published" className="sr-only peer" onChange={(e) => setChecked(Boolean(e.target.checked))} />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                {/* <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span> */}
-                            </label>
-                        </div>
-                    </div>
+
 
 
                     <div className="flex items-center justify-between">
-                    <DeleteStateResponseDialog res={formValues} stateName={stateName} agentName={agentName} label={"Delete"}/>
+                    <DeleteEntitySetDialog res={formValues} stateName={stateName} agentName={agentName} label={"Delete"}/>
                         <Button type="submit" variant={"secondary"}>Update</Button>
                     </div>
                 </Form>
@@ -178,8 +153,6 @@ export default function Agents() {
 const adata =
 {
     "id": "urn:uuid:aa92cjhvjvjhfkjdcjj8-640b-4823gfj-8b9e-5f9ea5aba651ddewwew",
-    "type_": "response",
-    "published": false,
-    "text": "Hello, how may I help you?"
+    "entity": "address"
 
 }
