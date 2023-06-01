@@ -12,6 +12,8 @@ import {
 
 import stylesheet from "~/tailwind.css";
 import NavBar from "./routes/navbar";
+import Sidebar from "./routes/sidebar";
+// import { Sidebar } from "lucide-react";
 // import stylesheet from "~/tailwind.css";
 
 
@@ -32,7 +34,8 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <NavBar />
+        {/* <NavBar /> */}
+        {/* <Sidebar /> */}
         <Outlet />
         <ScrollRestoration />
         <Scripts />

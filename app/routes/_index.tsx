@@ -1,9 +1,10 @@
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Button } from "components/ui/button";
 import { TypeOf, boolean, z } from "zod";
+import FSidebar from "./fbsidebar";
 
 export const meta: V2_MetaFunction = () => {
-  return [{ title: "New Remix App" }];
+  return [{ title: "Home" }];
 };
 
 export default function Index() {
@@ -14,16 +15,18 @@ export default function Index() {
   const ww = true;
   const qq = "true"
 
-  const www= z.coerce.boolean().parse(ww); // => true
-  const qqq= z.coerce.boolean().parse(qq); // => true
+  const www = z.coerce.boolean().parse(ww); // => true
+  const qqq = z.coerce.boolean().parse(qq); // => true
 
 
 
   return (
     <>
-    <h1>{www} ww</h1>
+
+      <div>hello</div>
+      {/* <FSidebar /> */}
+      {/* <h1>{www} ww</h1>
     <h1>{qqq} qq</h1>
-      {/* <Button variant={'secondary'}> new</Button> */}
       {formValues.published ? <label className="relative inline-flex items-center cursor-pointer ">
         <input
           name="published"
@@ -45,7 +48,7 @@ export default function Index() {
           />
           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
         </label>}
-
+ */}
 
       {/* 
       <label className="relative inline-flex items-center cursor-pointer ">
@@ -75,11 +78,16 @@ export default function Index() {
 
 
 
+export const entitySetSchema = z.object({
+  id: z.string(),
+  entity: z.string(),
+});
+
 
 // Define the state response schema
 export const stateResponseSchema = z.object({
   id: z.string(),
-  type: z.string(),
+  type_: z.string(),
   published: z.boolean(),
   text: z.string(),
 });
@@ -161,6 +169,7 @@ export type StatesType = z.infer<typeof stateSchema>;
 export type StateType = z.infer<typeof statSchema>;
 export type ResponseType = z.infer<typeof stateResponseSchema>;
 export type PromptsType = z.infer<typeof statePromptsSchema>;
+export type EntitySetType = z.infer<typeof entitySetSchema>;
 
 export const ddata = [
   {

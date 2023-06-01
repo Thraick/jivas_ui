@@ -50,7 +50,7 @@ export default function Agents() {
     const handlePublishButtonClick = (e: any, res: StateType) => {
         e.stopPropagation();
         const updatedData = stateData.map((item) => {
-            if (item.name === res.name) {
+            if (item.id === res.id) {
                 return { ...item, published: !res.published };
             }
             return item;
@@ -58,31 +58,36 @@ export default function Agents() {
         setStateData(updatedData);
     };
 
-    const {id} = useParams()
+    const { id } = useParams()
 
     const handleEditButtonClick = (e: any, res: StateType) => {
         e.stopPropagation();
-        if(id) navigate(id)
+        if (id) navigate(id)
     };
 
     const handleResponseTransition = (res: StateType) => {
         localStorageService.setItem('stateName', res.name)
-        navigate(res.id+"/responses")
+        navigate(res.id + "/responses")
     }
 
     const handleRepliesTransition = (res: StateType) => {
         localStorageService.setItem('stateName', res.name)
-        navigate(res.id+"/replies")
+        navigate(res.id + "/replies")
     }
 
     const handlePromptsTransition = (res: StateType) => {
         localStorageService.setItem('stateName', res.name)
-        navigate(res.id+"/prompts")
+        navigate(res.id + "/prompts")
     }
 
     const handleTypeTransition = (res: StateType) => {
         // localStorageService.setItem('stateName', res.name)
-        navigate(res.id+"/responses")
+        navigate(res.id + "/responses")
+    }
+
+    const handleEntitySetTransition = (res: StateType) => {
+        localStorageService.setItem('stateName', res.name)
+        navigate(res.id + "/entity_sets")
     }
 
     const filteredSearch = stateData
@@ -100,13 +105,13 @@ export default function Agents() {
     // const colors: { [key: string]: string } = {};
     // Dynamically create the typeColors mapping
     // useMemo(() => {
-        //     const updatedColors: Colors = {};
-        //     stateData.forEach((res) => {
-            //       updatedColors[res.type_] = getRandomColor();
-            //     });
-            //     setColors(updatedColors);
-            //   }, [stateData]);
-            
+    //     const updatedColors: Colors = {};
+    //     stateData.forEach((res) => {
+    //       updatedColors[res.type_] = getRandomColor();
+    //     });
+    //     setColors(updatedColors);
+    //   }, [stateData]);
+
     const [colors, setColors] = useState<Colors>({})
     // useEffect(() => {
     //     const updatedColors: Colors = {};
@@ -128,31 +133,31 @@ export default function Agents() {
     //             const lightColor = lightenColor(color, 0.3); // Increase the lightness by 30%
     //             setColors({[item.type_]: lightColor});
     //         });
-            
+
     //         localStorageService.setItem("labelColors", localColor)
     //     }
-        
+
     // }, [])
 
     useEffect(() => {
         let localColor = localStorageService.getItem("labelColors");
-      
+
         if (localColor) {
-          setColors(localColor);
-        //   console.log(colors)
-        //   console.log(localColor)
-        } 
-        else {
-          const updatedColors: Colors = {};
-          stateData.forEach((item) => {
-            const color = getRandomColor(colors);
-            // const lightColor = lightenColor(color, 0.5); // Increase the lightness by 30%
-            updatedColors[item.type_] = color;
-          });
-          setColors(updatedColors);
-          localStorageService.setItem("labelColors", updatedColors);
+            setColors(localColor);
+            //   console.log(colors)
+            //   console.log(localColor)
         }
-      }, []);
+        else {
+            const updatedColors: Colors = {};
+            stateData.forEach((item) => {
+                const color = getRandomColor(colors);
+                // const lightColor = lightenColor(color, 0.5); // Increase the lightness by 30%
+                updatedColors[item.type_] = color;
+            });
+            setColors(updatedColors);
+            localStorageService.setItem("labelColors", updatedColors);
+        }
+    }, []);
     // console.log(typeColors)
     // stateData.forEach((item)=>{
     //     console.log(colors[item.type_])
@@ -163,7 +168,7 @@ export default function Agents() {
     //   }, [colors]);
 
     return (
-        <div className="flex-1 justify-between flex flex-col bg-background">
+        <div className="flex justify-between flex flex-col bg-gray-100 h-screen">
             <div className="bg-background shadow-md p-4 flex justify-between items-center">
                 <h1 className="text-3xl capitalize">{agentName} States</h1>
                 <div className="flex items-center">
@@ -171,100 +176,146 @@ export default function Agents() {
                     <Input
                         type="text"
                         placeholder="Search"
-                        className="w-48 px-4 py-2 ml-4"
+                        className="w-52 px-4 py-2 ml-4"
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
                     />
-                    <Button variant={'secondary'} onClick={handleCreateTransition} className="ml-4" ><Plus className="mr-2 h-4 w-4" /> New State</Button>
+                    {/* <Button variant={'secondary'} onClick={handleCreateTransition} className="ml-4" ><Plus className="mr-2 h-4 w-4" /> New State</Button> */}
                 </div>
             </div>
-            {
-                filteredSearch.length === 0
-                    ?
-                    <div className="flex flex-col items-center justify-center mt-10">
-                        <Card onClick={handleCreateTransition} className="w-1/6 h-34 flex flex-col cursor-pointer items-center bg-secondary  justify-center">
 
-                            <CardTitle className="flex my-2 pt-4 items-center justify-between capitalize">
-                                Create State
-                            </CardTitle>
-                            <CardContent className="my-4 normal-case flex flex-col items-center text-center">
-                                {/* <Plus className="mr-2 h-4 w-4" />
+            <div className="flex items-center justify-between my-4 mx-6">
+                <div>
+                    <nav className="">
+
+                        <ol className="list-reset flex">
+                            <li>
+                            <Link to={'/'}>Home</Link>
+                            </li>
+                            <li>
+                                <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
+                            </li>
+                            <li>
+                                {/* <a
+                                    href="#"
+                                    className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                                >Agents</a> */}
+                                <Link to={'/agents'}>Agents</Link>
+                            </li>
+                            <li>
+                                <span className="mx-2 text-neutral-500 dark:text-neutral-400">{'>'}</span>
+                            </li>
+                            <li className="text-neutral-500 dark:text-neutral-400">States</li>
+                        </ol>
+                    </nav>
+                </div>
+                <Button variant={'secondary'} onClick={handleCreateTransition} className="bg-blue-400" ><Plus className="mr-2 h-4 w-4" /> New Agent</Button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+                {
+                    filteredSearch.length === 0
+                        ?
+                        <div className="flex flex-col items-center justify-center ">
+                            <Card onClick={handleCreateTransition} className="w-1/6 h-34 flex flex-col cursor-pointer items-center bg-secondary  justify-center">
+
+                                <CardTitle className="flex my-2 pt-4 items-center justify-between capitalize">
+                                    Create State
+                                </CardTitle>
+                                <CardContent className="my-4 normal-case flex flex-col items-center text-center">
+                                    {/* <Plus className="mr-2 h-4 w-4" />
                             New Agent */}
-                                {searchTerm}
-                                <Plus className="mt-2" />
-                            </CardContent>
-                        </Card>
-                    </div>
-                    :
-                    <div className="flex flex-wrap mt-20">
-                        {colors && filteredSearch
-                            .map((res: StateType) => (
-                                <div key={res.id} className="w-1/5 py-2">
-                                    <div className="px-2">
-                                        {/* <Card className={`p-0 border-${colors[res.type_] || `blue`}-200`} > */}
-                                        {/* <Card className={`p-0 border-${colors[res.type_] || getRandomColor().slice(1)}-200`}> */}
-                                        {/* <Card className={`rounded-lg border bg-card text-card-foreground shadow-sm p-0 border-${colors[res.type_] || 'blue'}-200 `}> */}
-                                        {/* <Card style={bordercolor: colors}> */}
-                                        <Card style={{ backgroundColor: `${colors[res.type_] || 'red'}11` }} >
-                                        {/* <Card style={{ borderColor: colors[res.type_] || 'red' }} > */}
-                                        {/* <Card style={{ borderColor: 'blue' || 'red' }} > */}
+                                    {searchTerm}
+                                    <Plus className="mt-2" />
+                                </CardContent>
+                            </Card>
+                        </div>
+                        :
+                        <div className="flex flex-wrap overflow-y-auto">
+                            {colors && filteredSearch
+                                .map((res: StateType) => (
+                                    <div key={res.id} className="w-1/5 pb-2">
+                                        <div className="px-2">
+                                            {/* <Card className={`p-0 border-${colors[res.type_] || `blue`}-200`} > */}
+                                            {/* <Card className={`p-0 border-${colors[res.type_] || getRandomColor().slice(1)}-200`}> */}
+                                            {/* <Card className={`rounded-lg border bg-card text-card-foreground shadow-sm p-0 border-${colors[res.type_] || 'blue'}-200 `}> */}
+                                            {/* <Card style={bordercolor: colors}> */}
+                                            <Card style={{ backgroundColor: `${colors[res.type_] || 'red'}11` }} >
+                                                {/* <Card style={{ borderColor: colors[res.type_] || 'red' }} > */}
+                                                {/* <Card style={{ borderColor: 'blue' || 'red' }} > */}
 
 
-                                            {/* <Card onClick={() => handleTransition(res)}> */}
-                                            <CardHeader className="pb-2 pr-0 pl-4">
-                                                <CardTitle className="flex items-center uppercase  justify-between">
-                                                    {res.name}
-                                                    <Button variant="link" className="hover:text-blue-500" onClick={(e) => handleEditButtonClick(e, res)} ><Edit className="h-4 w-4" /></Button>
+                                                {/* <Card onClick={() => handleTransition(res)}> */}
+                                                <CardHeader className="pb-2 pr-0 pl-4">
+                                                    <CardTitle className="flex items-center uppercase  justify-between">
+                                                        {res.name}
+                                                        <Button variant="link" className="hover:text-blue-500" onClick={(e) => handleEditButtonClick(e, res)} ><Edit className="h-4 w-4" /></Button>
 
-                                                </CardTitle>
-                                            </CardHeader>
-                                            <CardContent className="h-32 p-0 ">
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent className="h-34 p-0 ">
 
-                                                <div className="">
-                                                    <div onClick={(e) => handleTypeTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
+                                                    <div className="">
+                                                        <div onClick={(e) => handleTypeTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
 
-                                                        <div className="mr-4">Type:</div>
-                                                        <div className="value flex-grow text-right">{res.type_}</div>
+                                                            <div className="mr-4">Type:</div>
+                                                            <div className="value flex-grow text-right">{res.type_}</div>
+                                                        </div>
+                                                        <div onClick={(e) => handlePromptsTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
+
+                                                            <div className="mr-4">Prompts:</div>
+                                                            <div className="value flex-grow text-right">{dlen.prompts}</div>
+                                                        </div>
+                                                        <div onClick={(e) => handleRepliesTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
+                                                            <div className="mr-4">Replies:</div>
+                                                            <div className="value flex-grow text-right">{dlen.replies}</div>
+                                                        </div>
+                                                        {/* <Link to={'responses'} className="flex center py-1 hover:bg-gray-100" > */}
+                                                        <div onClick={(e) => handleResponseTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
+                                                            <div className="mr-4">Responses:</div>
+                                                            <div className="value flex-grow text-right">{dlen.responses}</div>
+                                                        </div>
+                                                        <div onClick={(e) => handleEntitySetTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
+                                                            <div className="mr-4">Entity Set:</div>
+                                                            <div className="value flex-grow text-right">{dlen.entity_set}</div>
+                                                        </div>
+                                                        {/* </Link> */}
                                                     </div>
-                                                    <div onClick={(e) => handlePromptsTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
-
-                                                        <div className="mr-4">Prompts:</div>
-                                                        <div className="value flex-grow text-right">{dlen.prompts}</div>
-                                                    </div>
-                                                    <div onClick={(e) => handleRepliesTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
-                                                        <div className="mr-4">Replies:</div>
-                                                        <div className="value flex-grow text-right">{dlen.replies}</div>
-                                                    </div>
-                                                    {/* <Link to={'responses'} className="flex center py-1 hover:bg-gray-100" > */}
-                                                    <div onClick={(e) => handleResponseTransition(res)} className="flex center py-1 px-4 hover:bg-gray-100 cursor-pointer">
-                                                        <div className="mr-4">Responses:</div>
-                                                        <div className="value flex-grow text-right">{dlen.responses}</div>
-                                                    </div>
-                                                    {/* </Link> */}
-                                                </div>
 
 
 
-                                            </CardContent>
-                                            <CardFooter className="flex mt-4 justify-between px-4">
-                                                <div></div>
-                                                {/* <Button variant="outline" className="" onClick={(e) => handleEditButtonClick(e, res)} ><Edit className="h-4 w-4" /></Button> */}
-                                                {res.published ?
-                                                    <div>
-                                                        <Button onClick={(e) => handlePublishButtonClick(e, res)} variant={'secondary'} className="bg-blue-200">Publish</Button>
-                                                    </div>
-                                                    :
-                                                    <div>
-                                                        <Button onClick={(e) => handlePublishButtonClick(e, res)} variant={'outline'}>Publish</Button>
-                                                    </div>}
-                                            </CardFooter>
-                                        </Card>
+                                                </CardContent>
+                                                <CardFooter className="flex mt-4 justify-between px-4">
+                                                    <div></div>
+                                                    {/* <Button variant="outline" className="" onClick={(e) => handleEditButtonClick(e, res)} ><Edit className="h-4 w-4" /></Button> */}
+                                                    {res.published ?
+                                                        <div>
+                                                            <Button onClick={(e) => handlePublishButtonClick(e, res)} variant={'secondary'} 
+                                                            style={{ 
+                                                                // backgroundColor: `${colors[res.type_] || 'red'}11` 
+                                                                backgroundImage: `linear-gradient(to bottom right, ${colors[res.type_] || 'red'}66, ${colors[res.type_] || 'red'})`,
+
+                                                            }} 
+                                                            // className="mix-blend-multiply"
+                                                            // className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                                                            // className={`bg-gradient-to-br from-${colors[res.type_] || 'red'}-600 to-${colors[res.type_] || 'gray'}-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2`}
+                                                            // className={`bg-${colors[res.type_] || 'red'}`}
+
+
+                                                            >Publish</Button>
+                                                        </div>
+                                                        :
+                                                        <div>
+                                                            <Button onClick={(e) => handlePublishButtonClick(e, res)} style={{ backgroundColor: `${colors[res.type_] || 'red'}11` }} variant={'secondary'} className="bg-blend-darken">Publish</Button>
+                                                        </div>}
+                                                </CardFooter>
+                                            </Card>
+                                        </div>
                                     </div>
-                                </div>
-                            ))
-                        }
-                    </div>
-            }
+                                ))
+                            }
+                        </div>
+                }
+            </div>
         </div >
     )
 }
@@ -280,19 +331,37 @@ const ddata = {
             "published": "true"
         },
         {
-            "id": "urn:uuid:1ca0c9d5-5faa-493f-bb97-56lkn45129b895d",
+            "id": "urn:uuid:1ca0c9d5-5asdffaa-493f-bb97-56lkn45129b895d",
             "type_": "nlu_response",
             "name": "qa_state",
             "published": "true"
         },
         {
-            "id": "urn:uuid:e872c8a9-3855-407e-b649-9540034lknlea792",
+            "id": "urn:uuid:e872c8a9-3855-asdf407e-b649-9540034lknlea792",
             "type_": "ner_response",
             "name": "greets",
             "published": "true"
         },
         {
-            "id": "urn:uuid:e872c8a9-3855-407e-b649-9540lnln034ea792",
+            "id": "urn:uuid:e872c8a9-3855-407asdfe-b649-9540lnln034ea792",
+            "type_": "ner_response",
+            "name": "greets",
+            "published": "false"
+        },
+        {
+            "id": "urn:uuid:1ca0c9d5-5faa-49asdf3f-bb97-56lkn45129b895d",
+            "type_": "nlu_response",
+            "name": "qa_state",
+            "published": "true"
+        },
+        {
+            "id": "urn:uuid:e872fsdc8a9-3855-407e-b649-9540034lknlea792",
+            "type_": "ner_response",
+            "name": "greets",
+            "published": "true"
+        },
+        {
+            "id": "urn:uuid:e872c8a9-38asdf55-407e-b649-9540welnln034ea792",
             "type_": "ner_response",
             "name": "greets",
             "published": "true"
@@ -303,7 +372,8 @@ const ddata = {
 const len = {
     "replies": 0,
     "responses": 4,
-    "prompts": 5
+    "prompts": 5,
+    "entity_set": 3
 }
 
 // const getRandomColor = () => {
@@ -331,7 +401,7 @@ const len = {
 //   };
 interface Colors {
     [key: string]: string;
-  }
+}
 
 
 
@@ -339,24 +409,24 @@ export function getRandomColor(usedColors: { [key: string]: string }) {
     const letters = "0123456789ABCDEF";
     let color = "#";
     let isUnique = false;
-  
+
     while (!isUnique) {
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-  
-      if (!usedColors[color]) {
-        isUnique = true;
-      } else {
-        color = "#";
-      }
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        if (!usedColors[color]) {
+            isUnique = true;
+        } else {
+            color = "#";
+        }
     }
-  
+
     return color;
-  }
-  
-  
-  
+}
+
+
+
 //   export function lightenColor(color: string, amount: number) {
 //     const hex = color.slice(1);
 //     const rgb = parseInt(hex, 16);
@@ -366,4 +436,3 @@ export function getRandomColor(usedColors: { [key: string]: string }) {
 //     const newColor = (r << 16) | (g << 8) | b;
 //     return "#" + newColor.toString(16).padStart(6, "0");
 //   }
-  

@@ -13,6 +13,7 @@ import {
 import { ActionArgs, redirect } from "@remix-run/node";
 // import { deleteFaqs } from "~/resolvers/faqs";
 import { ResponseType } from "./_index";
+import { EntitySetType } from "~/utils/dataTypes";
 
 
 
@@ -36,7 +37,7 @@ export async function action({ request, params }: ActionArgs) {
 };
 
 
-export default function DeleteStateResponseDialog(props: { res: ResponseType, stateName: string, agentName: string, label: string }) {
+export default function DeleteEntitySetDialog(props: { res: EntitySetType, stateName: string, agentName: string, label: string }) {
     const submit = useSubmit();
     const {id, sid} = useParams();
 
@@ -61,7 +62,7 @@ export default function DeleteStateResponseDialog(props: { res: ResponseType, st
                     <DialogHeader className="justify-center items-center">
                         <DialogTitle className="capitalize">Delete {props.agentName} {props.stateName} Response</DialogTitle>
                     </DialogHeader>
-                    <DialogDescription className="normal-case">{props.res.text}</DialogDescription>
+                    <DialogDescription className="normal-case">{props.res.entity}</DialogDescription>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="submit" autoFocus onClick={handleSubmit}>Delete</Button>
